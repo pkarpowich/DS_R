@@ -1,0 +1,99 @@
+---
+title: "hw1_solution"
+author: "Philip Karpowich"
+date: "September 4, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Problem 1 (30 points).
+
+
+
+```{r sem,eval=TRUE}
+# different sample sizes we are going to try:
+sample.sizes=c(3,10,50, 100, 500, 1000)
+
+mean.sds = numeric(0) 
+i=1
+
+for ( N in sample.sizes ) { # try different sample sizes
+  # Set m to an empty vector at the beginning of each outer loop loop
+  m=numeric(0)
+  # Inner loop will build vecotr m which will contain 1000 means for a sample drawn from 
+  # a normal distribution with mean 0 and sd 1 where sample size = N
+  j = 0; while(j < 1000){
+    m=c(m,(mean(rnorm(sample.sizes[i]))))
+    j = j+1
+  }
+  # Concatinating the mean 
+  mean.sds=c(mean.sds,sd(m))
+  i=i+1
+}
+
+plot(sample.sizes,mean.sds, main="SEM vs sample size",pch=19,xlab='Sample size',ylab='SEM')
+lines(sample.sizes,1/sqrt(sample.sizes),col='blue')
+```
+
+
+
+# Problem 2 (30 points).
+
+
+```{r clt,eval=TRUE}
+N = 1  # the number of i.i.d. variables X we are going to sum
+
+# how many times we are going to repeat the "experiment" (see the text above for what we call an experiment):
+repeats = 1000 
+s.values=numeric() # we will use this vector to store the value of the sum in each experiment
+
+for (n.exp in 1:repeats) { # repeat the experiment!
+  # Initialize the vector m
+  m=numeric(0)
+  # Insert into vector m N number of random variables drawn from an 
+  # exponential distribution
+  m=rexp(N)
+  # Sum all values in vector M and insert them into the s.values vector in the n.exp
+  # position
+  s.values[n.exp] = sum(m)
+}
+
+hist(s.values, breaks = 50,main="Exponential Distrabution where N = 1")
+shapiro.test(s.values)
+
+N = 30  # the number of i.i.d. variables X we are going to sum
+
+# how many times we are going to repeat the "experiment" (see the text above for what we call an experiment):
+repeats = 1000 
+s.values=numeric() # we will use this vector to store the value of the sum in each experiment
+
+for (n.exp in 1:repeats) { # repeat the experiment!
+  m=numeric(0)
+  m=rexp(N)
+  s.values[n.exp] = sum(m)
+}
+hist(s.values, breaks = 50, main="Exponential Distrabution where N = 30")
+shapiro.test(s.values)
+
+N = 100000  # the number of i.i.d. variables X we are going to sum
+
+# how many times we are going to repeat the "experiment" (see the text above for what we call an experiment):
+repeats = 1000 
+s.values=numeric() # we will use this vector to store the value of the sum in each experiment
+
+for (n.exp in 1:repeats) { # repeat the experiment!
+  m=numeric(0)
+  m=rexp(N)
+  s.values[n.exp] = sum(m)
+}
+hist(s.values, breaks = 50, main="Exponential Distrabution where N = 10000")
+shapiro.test(s.values)
+```
+
+Question: as $N$ becomes larger, the sample means becomes normally distributed and the average will approach the expected value of your random variable. The standard deviation will decrease. The shape of such distribution of sample means will be bell shaped and normally distributed.
+
+
